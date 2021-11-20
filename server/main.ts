@@ -1,7 +1,7 @@
 import { WebSocketServer } from "ws";
 
 import { Client } from "./client";
-import { HangmanWebSocket } from "./typings/HangmanWebSocket";
+import { HangmanWebSocket } from "./types/HangmanWebSocket";
 
 const wss = new WebSocketServer({
     port: 42337,
