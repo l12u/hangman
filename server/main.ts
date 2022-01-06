@@ -12,10 +12,19 @@ console.info("Socket server started listening on port 42337");
 wss.on("connection", (ws: HangmanWebSocket, request) => {
     ws.client = new Client();
 
-    ws.on("message", (data) => {
+    console.debug(`Opened socket connection for client "${ws.client.id}"`);
+
+    ws.on("message", (data, isBinary) => {
+        if (!isBinary) {
+            ws.send(data.toString("utf-8"));
+        }
     });
 
     ws.on("pong", () => ws.client.isAlive = true);
+
+    ws.on("close", () => {
+        console.debug(`Closed socket for client "${ws.client.id}"`);
+    });
 });
 
 const heartbeatInterval = setInterval(() => {
@@ -33,4 +42,6 @@ const heartbeatInterval = setInterval(() => {
     });
 }, 30000);
 
-wss.on("close", () => clearInterval(heartbeatInterval));
+wss.on("close", () => {
+    clearInterval(heartbeatInterval);
+});
